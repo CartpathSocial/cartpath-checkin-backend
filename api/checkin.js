@@ -16,7 +16,14 @@ export default async function handler(req, res) {
 
   const { fullName, email, phone, firstVisit, agreeWaiver } = req.body;
 
-  if (!agreeWaiver || !email || !fullName || !phone) {
+  // Normalize checkbox or boolean-like values
+  const normalizedFirstVisit =
+    firstVisit === true || firstVisit === 'true' || firstVisit === 'on';
+
+  const normalizedAgreeWaiver =
+    agreeWaiver === true || agreeWaiver === 'true' || agreeWaiver === 'on';
+
+  if (!normalizedAgreeWaiver || !email || !fullName || !phone) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
@@ -33,8 +40,8 @@ export default async function handler(req, res) {
       FullName: fullName,
       Email: email,
       Phone: phone,
-      FirstVisit: firstVisit === true || firstVisit === 'true' ? 'Yes' : 'No',
-      WaiverSigned: agreeWaiver === true || agreeWaiver === 'true' ? 'Yes' : 'No',
+      FirstVisit: normalizedFirstVisit ? 'Yes' : 'No',
+      WaiverSigned: normalizedAgreeWaiver ? 'Yes' : 'No',
     });
 
     res.status(200).json({ success: true, message: 'Check-in successful!' });
