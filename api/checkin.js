@@ -24,18 +24,14 @@ export default async function handler(req, res) {
 export default async function handler(req, res) {
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Origin', '*');
-@@ -21,15 +43,22 @@
     await doc.loadInfo();
     const sheet = doc.sheetsByIndex[0];
     await sheet.addRow({
-      Name: fullName,
       Timestamp: new Date().toLocaleString(),
       FullName: fullName,
       Email: email,
       Phone: phone,
       FirstVisit: firstVisit ? 'Yes' : 'No',
-      CheckInDate: new Date().toLocaleString(),
-    });
       WaiverSigned: agreeWaiver ? 'Yes' : 'No',
   });
     res.status(200).json({ success: true, message: 'Check-in successful!' });
