@@ -33,8 +33,8 @@ export default async function handler(req, res) {
       FullName: fullName,
       Email: email,
       Phone: phone,
-      FirstVisit: firstVisit ? 'Yes' : 'No',
-      WaiverSigned: agreeWaiver ? 'Yes' : 'No',
+      FirstVisit: firstVisit === true || firstVisit === 'true' ? 'Yes' : 'No',
+      WaiverSigned: agreeWaiver === true || agreeWaiver === 'true' ? 'Yes' : 'No',
     });
 
     res.status(200).json({ success: true, message: 'Check-in successful!' });
