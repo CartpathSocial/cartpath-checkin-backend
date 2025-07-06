@@ -43,13 +43,13 @@ export default async function handler(req, res) {
     await doc.loadInfo();
     const sheet = doc.sheetsByIndex[0];
     await sheet.addRow({
-      Timestamp: new Date().toLocaleString(),
-      FullName: fullName,
-      Email: email,
-      Phone: phone,
-      FirstVisit: firstVisit ? 'Yes' : 'No',
-      WaiverSigned: agreeWaiver ? 'Yes' : 'No',
-  });
+  Timestamp: new Date().toLocaleString(),
+  FullName: fullName,
+  Email: email,
+  Phone: phone,
+  FirstVisit: firstVisit ? 'Yes' : 'No',
+  WaiverSigned: agreeWaiver ? 'Yes' : 'No',
+});
     res.status(200).json({ success: true, message: 'Check-in successful!' });
   } catch (error) {
     console.error('Error:', error);
