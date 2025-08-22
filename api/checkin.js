@@ -1,41 +1,42 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 
 export default async function handler(req, res) {
+  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     return res.status(200).end();
+  }
+
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
+  if (req.method === 'GET') {
+    return res.status(200).json({ message: 'Check-in API is live!' });
   }
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  // Allow cross-origin requests and disable caching
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Expires', '0');
+  // Parse JSON body
+  let body;
+  try {
+    body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+  } catch (err) {
+    return res.status(400).json({ error: 'Invalid JSON' });
+  }
 
-  const { fullName, email, phone, firstVisit, agreeWaiver } = req.body;
+  const { fullName, email, phone, firstVisit, agreeWaiver } = body;
 
-  // Normalize checkbox/boolean values
   const normalizedFirstVisit =
     firstVisit === true || firstVisit === 'true' || firstVisit === 'on';
 
   const normalizedAgreeWaiver =
     agreeWaiver === true || agreeWaiver === 'true' || agreeWaiver === 'on';
-
-  // Debugging logs (optional - remove in production)
-  console.log('Incoming request body:', req.body);
-  console.log('Normalized values:', {
-    fullName,
-    email,
-    phone,
-    normalizedFirstVisit,
-    normalizedAgreeWaiver
-  });
 
   if (!normalizedAgreeWaiver || !email || !fullName || !phone) {
     return res.status(400).json({ error: 'Missing required fields' });
