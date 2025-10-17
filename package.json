@@ -2,6 +2,9 @@
   "name": "cartpath-checkin-backend",
   "version": "1.0.0",
   "main": "index.js",
+  "scripts": {
+    "probe:checkin": "node scripts/probe-checkin.mjs"
+  },
   "dependencies": {
     "google-spreadsheet": "^3.3.0",
     "square": "^18.0.0"
